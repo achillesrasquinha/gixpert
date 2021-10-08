@@ -1,4 +1,5 @@
 import deeply.datasets as dd
 
 def get_data():
-    dd.load("hyper_kvasir_segmented")
+    hyper_kvasir = dd.load("hyper_kvasir_segmented")
+    return hyper_kvasir
