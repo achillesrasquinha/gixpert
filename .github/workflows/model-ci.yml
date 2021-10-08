@@ -5,7 +5,9 @@ on: [push, pull_request]
 jobs:
   train:
     name: Train
-    runs-on: achillesrasquinha/dl
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/achillesrasquinha/dl
 
     steps:
       - uses: actions/checkout@v2
