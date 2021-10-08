@@ -93,9 +93,9 @@ endif
 
 	$(call log,INFO,Installing Requirements)
 ifeq (${ENVIRONMENT},test)
-	$(PIP) install -r $(BASEDIR)/requirements-test.txt $(OUT)
+	$(PIP) install -r $(BASEDIR)/requirements-test.txt $(PIP_ARGS) $(OUT)
 else
-	$(PIP) install -r $(BASEDIR)/requirements-dev.txt  $(OUT)
+	$(PIP) install -r $(BASEDIR)/requirements-dev.txt  $(PIP_ARGS) $(OUT)
 endif
 
 	$(call log,INFO,Installing ${PROJECT} (${ENVIRONMENT}))

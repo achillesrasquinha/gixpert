@@ -20,4 +20,4 @@ jobs:
           python setup.py develop
       - name: Run Pipeline
         run: |
-          python -m gixpert.data.get_data
+          bpyutils -m gixpert.data.get_data
