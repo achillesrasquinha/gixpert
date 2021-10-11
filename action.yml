@@ -1,0 +1,5 @@
+name: "gixpert"
+description: "GI Encodscopy using Deep Learning"
+runs:
+  using: "docker"
+  image: "Dockerfile"
