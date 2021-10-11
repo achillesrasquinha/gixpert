@@ -8,7 +8,9 @@ from bpyutils.util.system  import makedirs
 
 import deeply.datasets as dd
 
-_PREFIX = NAME.upper()
+_PREFIX  = NAME.upper()
+
+DATASETS = ("hyper_kvasir_segmented",)
 
 def get_data_dir(data_dir = None):
     data_dir = data_dir \
@@ -21,9 +23,8 @@ def get_data_dir(data_dir = None):
 
 def get_data(data_dir = None):
     data_dir = get_data_dir(data_dir)
-    hyper_kvasir = dd.load("hyper_kvasir_segmented", data_dir = data_dir)
-    return hyper_kvasir
+    dd.load(*DATASETS, data_dir = data_dir)
 
 def preprocess_data(data_dir = None):
     data_dir = get_data_dir(data_dir)
-    # do something ...
+    datasets = dd.load(*DATASETS, data_dir = data_dir)
