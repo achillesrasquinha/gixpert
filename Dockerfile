@@ -14,9 +14,10 @@ RUN apk add --no-cache \
 COPY . $GIXPERT_PATH
 COPY ./docker/entrypoint.sh /entrypoint.sh
 
-RUN pip install $GIXPERT_PATH
-
 WORKDIR $GIXPERT_PATH
+
+RUN pip install -r ./requirements.txt && \
+    python setup.py install
 
 ENTRYPOINT ["/entrypoint.sh"]
 

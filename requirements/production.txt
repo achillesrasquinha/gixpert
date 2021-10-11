@@ -1,2 +1,2 @@
 git+git://github.com/achillesrasquinha/bpyutils.git@develop#egg=bpyutils
-# git+https://github.com/achillesrasquinha/deeply.git
+git+git://github.com/achillesrasquinha/deeply.git@develop#egg=deeply
