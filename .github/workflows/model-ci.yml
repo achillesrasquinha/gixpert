@@ -24,4 +24,5 @@ jobs:
       - name: Run Pipeline
         run: |
           bpyutils -m gixpert.data.get_data
-          bpyutils -m gixpert.data.preprocess_data 
+          bpyutils -m gixpert.data.preprocess_data
+          bpyutils -m gixpert.pipelines.train
