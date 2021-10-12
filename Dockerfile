@@ -1,12 +1,11 @@
-
-
-FROM  python:3.7-alpine
+FROM  python:3.7
 
 LABEL maintainer=achillesrasquinha@gmail.com
 
 ENV GIXPERT_PATH=/usr/local/src/gixpert
 
-RUN apk add --no-cache \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
         bash \
         git \
     && mkdir -p $GIXPERT_PATH
