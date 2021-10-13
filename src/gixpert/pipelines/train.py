@@ -24,7 +24,7 @@ def build_model():
 
     return unet
 
-def train(batch_size = 1, learning_rate = 1e-5, epochs = 10, data_dir = None):
+def train(batch_size = 1, learning_rate = 1e-5, epochs = 10, data_dir = None, *args, **kwargs):
     model = build_model()
     model.compile(optimizer = Adam(learning_rate = learning_rate),
         loss = dice_loss)

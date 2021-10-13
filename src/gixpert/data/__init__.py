@@ -30,11 +30,11 @@ def get_data_dir(data_dir = None):
 
     return data_dir
 
-def get_data(data_dir = None):
+def get_data(data_dir = None, check = False):
     data_dir = get_data_dir(data_dir)
     dd.load(*DATASETS, data_dir = data_dir)
 
-def preprocess_data(data_dir = None):
+def preprocess_data(data_dir = None, check = False):
     data_dir = get_data_dir(data_dir)
     datasets = lmap(
         lambda x: x["data"],
@@ -60,6 +60,9 @@ def preprocess_data(data_dir = None):
 
         for split_type, split in iteritems(groups):
             dir_path = osp.join(data_dir, split_type)
+
+            if check:
+                split = split.take(3)
 
             for i, data in enumerate(tq.tqdm(split.batch(1))):
                 augment_images(image_augmentor, images = data["image"].numpy(), filename = osp.join(dir_path, "images", "%s.jpg" % i))
