@@ -23,6 +23,10 @@ jobs:
           python setup.py develop
       - name: Run Pipeline
         run: |
-          bpyutils -m gixpert.data.get_data
-          bpyutils -m gixpert.data.preprocess_data
-          bpyutils -m gixpert.pipelines.train
+          bpyutils --run-ml gixpert -p "artifacts_path=./artifacts"
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: train-artifacts
+          path: ./artifacts.zip

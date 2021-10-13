@@ -7,11 +7,15 @@ from deeply.model.unet import (
     Trainer
 )
 
-from deeply.datasets.util import SPLIT_TYPES
-from deeply.generators    import ImageMaskGenerator
-from deeply.losses        import dice_loss
+from deeply.datasets.util   import SPLIT_TYPES
+from deeply.generators      import ImageMaskGenerator
+from deeply.losses          import dice_loss
 
-from gixpert.data import get_data_dir
+from gixpert.data   import get_data_dir
+from gixpert.config import PATH
+from gixpert import __name__ as NAME
+
+_PREFIX  = NAME.upper()
 
 IMAGE_SIZE = (256, 256)
 
@@ -24,7 +28,7 @@ def build_model():
 
     return unet
 
-def train(batch_size = 1, learning_rate = 1e-5, epochs = 10, data_dir = None, *args, **kwargs):
+def train(batch_size = 1, learning_rate = 1e-5, epochs = 10, data_dir = None, artifacts_path = None, *args, **kwargs):
     model = build_model()
     model.compile(optimizer = Adam(learning_rate = learning_rate),
         loss = dice_loss)
@@ -48,5 +52,5 @@ def train(batch_size = 1, learning_rate = 1e-5, epochs = 10, data_dir = None, *a
         ImageMaskGenerator(path_img % type_, path_msk % type_, **args) for type_ in SPLIT_TYPES
     ]
     
-    trainer = Trainer()
+    trainer = Trainer(artifacts_path = artifacts_path)
     history = trainer.fit(model, train_, val = val, epochs = epochs)

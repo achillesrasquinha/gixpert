@@ -30,11 +30,11 @@ def get_data_dir(data_dir = None):
 
     return data_dir
 
-def get_data(data_dir = None, check = False):
+def get_data(data_dir = None, check = False, *args, **kwargs):
     data_dir = get_data_dir(data_dir)
     dd.load(*DATASETS, data_dir = data_dir)
 
-def preprocess_data(data_dir = None, check = False):
+def preprocess_data(data_dir = None, check = False, *args, **kwargs):
     data_dir = get_data_dir(data_dir)
     datasets = lmap(
         lambda x: x["data"],
