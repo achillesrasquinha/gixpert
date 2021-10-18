@@ -1,5 +1,6 @@
 import os.path as osp
 
+import numpy as np
 import imgaug.augmenters as iaa
 import tqdm as tq
 
@@ -12,6 +13,7 @@ from bpyutils._compat      import iteritems
 import deeply.datasets as dd
 from   deeply.datasets.util import SPLIT_TYPES, split as split_datasets
 from   deeply.util.image    import augment as augment_images
+import deeply.img.augmenters as dia
 
 from gixpert.config import PATH
 from gixpert import __name__ as NAME
@@ -51,7 +53,8 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
     ])
 
     mask_augmentor  = iaa.Sequential([
-        iaa.Resize({ "width": width, "height": height })
+        iaa.Resize({ "width": width, "height": height }),
+        dia.Dilate(kernel = np.ones((15, 15)))
     ])
     
     for dataset in datasets:

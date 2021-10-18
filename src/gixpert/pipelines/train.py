@@ -1,6 +1,7 @@
 import os.path as osp
 
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.metrics    import binary_accuracy
 
 from deeply.model.unet import (
     UNet,
@@ -17,7 +18,7 @@ from gixpert import __name__ as NAME
 
 _PREFIX  = NAME.upper()
 
-IMAGE_SIZE = (256, 256)
+IMAGE_SIZE = (512, 512)
 
 def build_model():
     width, height = IMAGE_SIZE
@@ -28,10 +29,10 @@ def build_model():
 
     return unet
 
-def train(batch_size = 1, learning_rate = 1e-5, epochs = 10, data_dir = None, artifacts_path = None, *args, **kwargs):
+def train(batch_size = 1, learning_rate = 1e-5, epochs = 50, data_dir = None, artifacts_path = None, *args, **kwargs):
     model = build_model()
     model.compile(optimizer = Adam(learning_rate = learning_rate),
-        loss = dice_loss)
+        loss = [dice_loss, binary_accuracy])
 
     output_shape = model.output_shape[1:-1]
 
