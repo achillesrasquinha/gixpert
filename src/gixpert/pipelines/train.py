@@ -11,28 +11,32 @@ from deeply.model.unet import (
 from deeply.datasets.util   import SPLIT_TYPES
 from deeply.generators      import ImageMaskGenerator
 from deeply.losses          import dice_loss
+from deeply.metrics         import dice_coefficient
 
 from gixpert.data   import get_data_dir
 from gixpert.config import PATH
-from gixpert import __name__ as NAME
+from gixpert.const  import IMAGE_SIZE
+from gixpert import __name__ as NAME, dops
 
 _PREFIX  = NAME.upper()
 
-IMAGE_SIZE = (512, 512)
-
-def build_model():
+def build_model(artifacts_path = None):
     width, height = IMAGE_SIZE
     unet = UNet(x = width, y = height, n_classes = 1,
         final_activation = "sigmoid", batch_norm = False, padding = "same")
     
-    # unet.plot()
+    if artifacts_path:
+        path_plot = osp.join(artifacts_path, "model.png")
+        unet.plot(to_file = path_plot)
 
     return unet
 
 def train(batch_size = 1, learning_rate = 1e-5, epochs = 50, data_dir = None, artifacts_path = None, *args, **kwargs):
     model = build_model()
     model.compile(optimizer = Adam(learning_rate = learning_rate),
-        loss = [dice_loss, binary_accuracy])
+        loss = dice_loss, metrics = [binary_accuracy])
+
+    dops.watch(model)
 
     output_shape = model.output_shape[1:-1]
 

@@ -16,12 +16,12 @@ from   deeply.util.image    import augment as augment_images
 import deeply.img.augmenters as dia
 
 from gixpert.config import PATH
-from gixpert import __name__ as NAME
+from gixpert.const  import IMAGE_SIZE
+from gixpert import __name__ as NAME, dops
 
 _PREFIX  = NAME.upper()
 
-IMAGE_SIZE  = (256, 256)
-DATASETS    = ("hyper_kvasir_segmented",)
+DATASETS = ("hyper_kvasir_segmented",)
 
 def get_data_dir(data_dir = None):
     data_dir = data_dir \
@@ -34,7 +34,8 @@ def get_data_dir(data_dir = None):
 
 def get_data(data_dir = None, check = False, *args, **kwargs):
     data_dir = get_data_dir(data_dir)
-    dd.load(*DATASETS, data_dir = data_dir)
+    datasets = dd.load(*DATASETS, data_dir = data_dir)
+    # dops.upload()
 
 def preprocess_data(data_dir = None, check = False, *args, **kwargs):
     data_dir = get_data_dir(data_dir)
@@ -45,11 +46,7 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
 
     width, height   = IMAGE_SIZE
     image_augmentor = iaa.Sequential([
-        iaa.Resize({ "width": width, "height": height }),
-        iaa.CLAHE(
-            from_colorspace = iaa.CLAHE.RGB,
-            to_colorspace   = iaa.CLAHE.HSV
-        )
+        iaa.Resize({ "width": width, "height": height })
     ])
 
     mask_augmentor  = iaa.Sequential([
@@ -70,3 +67,6 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
             for i, data in enumerate(tq.tqdm(split.batch(1))):
                 augment_images(image_augmentor, images = data["image"].numpy(), filename = osp.join(dir_path, "images", "%s.jpg" % i))
                 augment_images(mask_augmentor,  images = data["mask"].numpy(),  filename = osp.join(dir_path, "masks",  "%s.jpg" % i))
+
+    # dirs = lmap(lambda x: osp.join(data_dir, split), SPLIT_TYPES)
+    # dops.upload(*dirs)
