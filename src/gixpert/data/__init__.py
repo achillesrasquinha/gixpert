@@ -35,7 +35,6 @@ def get_data_dir(data_dir = None):
 def get_data(data_dir = None, check = False, *args, **kwargs):
     data_dir = get_data_dir(data_dir)
     datasets = dd.load(*DATASETS, data_dir = data_dir)
-    # dops.upload()
 
 def preprocess_data(data_dir = None, check = False, *args, **kwargs):
     data_dir = get_data_dir(data_dir)
@@ -68,5 +67,5 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
                 augment_images(image_augmentor, images = data["image"].numpy(), filename = osp.join(dir_path, "images", "%s.jpg" % i))
                 augment_images(mask_augmentor,  images = data["mask"].numpy(),  filename = osp.join(dir_path, "masks",  "%s.jpg" % i))
 
-    # dirs = lmap(lambda x: osp.join(data_dir, split), SPLIT_TYPES)
+    dirs = lmap(lambda x: osp.join(data_dir, x), SPLIT_TYPES)
     # dops.upload(*dirs)
