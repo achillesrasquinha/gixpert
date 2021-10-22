@@ -31,7 +31,7 @@ def build_model(artifacts_path = None):
 
     return unet
 
-def train(batch_size = 1, learning_rate = 1e-5, epochs = 3, data_dir = None, artifacts_path = None, *args, **kwargs):
+def train(batch_size = 1, learning_rate = 1e-5, epochs = 50, data_dir = None, artifacts_path = None, *args, **kwargs):
     model = build_model()
     model.compile(optimizer = Adam(learning_rate = learning_rate),
         loss = dice_loss, metrics = [binary_accuracy])
