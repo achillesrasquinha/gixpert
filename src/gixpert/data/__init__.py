@@ -21,7 +21,11 @@ from gixpert import __name__ as NAME, dops
 
 _PREFIX  = NAME.upper()
 
-DATASETS = ("hyper_kvasir_segmented",)
+DATASETS = (
+    "cvc_clinic_db",
+    "kvasir_segmented",
+    "hyper_kvasir_segmented"
+)
 
 def get_data_dir(data_dir = None):
     data_dir = data_dir \

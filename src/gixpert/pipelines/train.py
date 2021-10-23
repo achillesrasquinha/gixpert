@@ -18,12 +18,13 @@ from gixpert.config import PATH
 from gixpert.const  import IMAGE_SIZE
 from gixpert import __name__ as NAME, dops
 
-_PREFIX  = NAME.upper()
+_PREFIX = NAME.upper()
 
-def build_model(artifacts_path = None):
+def build_model(batch_size = 32, artifacts_path = None):
     width, height = IMAGE_SIZE
+    batch_norm    = True if batch_size >= 32 else False
     unet = UNet(x = width, y = height, n_classes = 1,
-        final_activation = "sigmoid", batch_norm = False, padding = "same")
+        final_activation = "sigmoid", batch_norm = batch_norm, padding = "same")
     
     if artifacts_path:
         path_plot = osp.join(artifacts_path, "model.png")
@@ -31,7 +32,7 @@ def build_model(artifacts_path = None):
 
     return unet
 
-def train(batch_size = 1, learning_rate = 1e-5, epochs = 50, data_dir = None, artifacts_path = None, *args, **kwargs):
+def train(batch_size = 32, learning_rate = 1e-5, epochs = 56, data_dir = None, artifacts_path = None, *args, **kwargs):
     model = build_model()
     model.compile(optimizer = Adam(learning_rate = learning_rate),
         loss = dice_loss, metrics = [binary_accuracy])
