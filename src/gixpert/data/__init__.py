@@ -8,6 +8,7 @@ from bpyutils.util.environ import getenv
 from bpyutils.util.system  import makedirs
 from bpyutils.util.array   import sequencify
 from bpyutils.util.types   import lmap
+from bpyutils.util._dict   import merge_dict
 from bpyutils._compat      import iteritems
 
 import deeply.datasets as dd
@@ -23,8 +24,9 @@ _PREFIX  = NAME.upper()
 
 DATASETS = (
     "cvc_clinic_db",
-    "kvasir_segmented",
-    "hyper_kvasir_segmented"
+    # "etis_larib",
+    # "kvasir_segmented",
+    # "hyper_kvasir_segmented"
 )
 
 def get_data_dir(data_dir = None):
@@ -48,6 +50,7 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
     )
 
     width, height   = IMAGE_SIZE
+    # TODO: Add Image Enhancers.
     image_augmentor = iaa.Sequential([
         iaa.Resize({ "width": width, "height": height })
     ])
@@ -71,5 +74,8 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
                 augment_images(image_augmentor, images = data["image"].numpy(), filename = osp.join(dir_path, "images", "%s.jpg" % i))
                 augment_images(mask_augmentor,  images = data["mask"].numpy(),  filename = osp.join(dir_path, "masks",  "%s.jpg" % i))
 
-    dirs = lmap(lambda x: osp.join(data_dir, x), SPLIT_TYPES)
-    # dops.upload(*dirs)
+    # config = [
+    #     { "source": osp.join(data_dir, split_type), "destination": split_type }
+    #         for split_type in SPLIT_TYPES
+    # ]
+    # dops.upload(*config)

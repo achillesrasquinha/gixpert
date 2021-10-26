@@ -8,23 +8,25 @@ from deeply.model.unet import (
     Trainer
 )
 
-from deeply.datasets.util   import SPLIT_TYPES
-from deeply.generators      import ImageMaskGenerator
-from deeply.losses          import dice_loss
-from deeply.metrics         import dice_coefficient
+from deeply.datasets.util import SPLIT_TYPES
+from deeply.generators    import ImageMaskGenerator
+from deeply.losses        import dice_loss
 
 from gixpert.data   import get_data_dir
 from gixpert.config import PATH
 from gixpert.const  import IMAGE_SIZE
-from gixpert import __name__ as NAME, dops
+from gixpert import __name__ as NAME, dops, settings
 
 _PREFIX = NAME.upper()
 
-def build_model(batch_size = 32, artifacts_path = None):
+def build_model(artifacts_path = None, batch_norm = False):
+    dropout_rate  = settings.get("dropout_rate")
+
     width, height = IMAGE_SIZE
-    batch_norm    = True if batch_size >= 32 else False
+
     unet = UNet(x = width, y = height, n_classes = 1,
-        final_activation = "sigmoid", batch_norm = batch_norm, padding = "same")
+        final_activation = "sigmoid", batch_norm = batch_norm, 
+        dropout_rate = dropout_rate, padding = "same")
     
     if artifacts_path:
         path_plot = osp.join(artifacts_path, "model.png")
@@ -32,8 +34,14 @@ def build_model(batch_size = 32, artifacts_path = None):
 
     return unet
 
-def train(batch_size = 32, learning_rate = 1e-5, epochs = 56, data_dir = None, artifacts_path = None, *args, **kwargs):
-    model = build_model()
+def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs):
+    batch_size    = 1 if check else settings.get("batch_size")
+    learning_rate = settings.get("learning_rate")
+    epochs        = settings.get("epochs")
+
+    batch_norm    = True if batch_size >= 32 else False
+    
+    model = build_model(batch_norm = batch_norm)
     model.compile(optimizer = Adam(learning_rate = learning_rate),
         loss = dice_loss, metrics = [binary_accuracy])
 
@@ -55,8 +63,9 @@ def train(batch_size = 32, learning_rate = 1e-5, epochs = 56, data_dir = None, a
     )
 
     train_, val, test = [
-        ImageMaskGenerator(path_img % type_, path_msk % type_, **args) for type_ in SPLIT_TYPES
+        ImageMaskGenerator(path_img % type_, path_msk % type_, **args)
+            for type_ in SPLIT_TYPES
     ]
-    
+
     trainer = Trainer(artifacts_path = artifacts_path)
-    history = trainer.fit(model, train_, val = val, epochs = epochs)
+    history = trainer.fit(model, train_, val = val, epochs = epochs, batch_size = batch_size)
