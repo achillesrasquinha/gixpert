@@ -19,8 +19,9 @@ from gixpert import __name__ as NAME, dops, settings
 
 _PREFIX = NAME.upper()
 
-def build_model(artifacts_path = None, batch_norm = False):
+def build_model(artifacts_path = None):
     dropout_rate  = settings.get("dropout_rate")
+    batch_norm    = settings.get("batch_norm")
 
     width, height = IMAGE_SIZE
 
@@ -39,9 +40,9 @@ def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs
     learning_rate = settings.get("learning_rate")
     epochs        = settings.get("epochs")
 
-    batch_norm    = True if batch_size >= 32 else False
+    # batch_norm    = True if batch_size >= 32 else False
     
-    model = build_model(batch_norm = batch_norm)
+    model = build_model()
     model.compile(optimizer = Adam(learning_rate = learning_rate),
         loss = dice_loss, metrics = [binary_accuracy])
 
