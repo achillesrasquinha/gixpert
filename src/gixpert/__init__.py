@@ -34,8 +34,9 @@ cache.create()
 settings = Settings(location = PATH["CACHE"], defaults = {
     "batch_size": 32,
     "learning_rate": 1e-5,
+    "batch_norm": False,
     "dropout_rate": 0.5,
-    "epochs": 56
+    "epochs": 56,
 })
 
 def get_version_str():
