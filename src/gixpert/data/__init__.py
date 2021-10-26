@@ -24,9 +24,9 @@ _PREFIX  = NAME.upper()
 
 DATASETS = (
     "cvc_clinic_db",
-    # "etis_larib",
-    # "kvasir_segmented",
-    # "hyper_kvasir_segmented"
+    "etis_larib",
+    "kvasir_segmented",
+    "hyper_kvasir_segmented"
 )
 
 def get_data_dir(data_dir = None):
