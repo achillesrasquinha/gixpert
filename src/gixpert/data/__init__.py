@@ -24,7 +24,7 @@ _PREFIX  = NAME.upper()
 
 DATASETS = (
     "cvc_clinic_db",
-    "etis_larib",
+    # "etis_larib",
     "kvasir_segmented",
     "hyper_kvasir_segmented"
 )
