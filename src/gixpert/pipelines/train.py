@@ -39,8 +39,6 @@ def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs
     batch_size    = 1 if check else settings.get("batch_size")
     learning_rate = settings.get("learning_rate")
     epochs        = settings.get("epochs")
-
-    # batch_norm    = True if batch_size >= 32 else False
     
     model = build_model()
     model.compile(optimizer = Adam(learning_rate = learning_rate),

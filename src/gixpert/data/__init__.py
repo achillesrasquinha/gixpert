@@ -8,7 +8,7 @@ from bpyutils.util.environ import getenv
 from bpyutils.util.system  import makedirs
 from bpyutils.util.array   import sequencify
 from bpyutils.util.types   import lmap
-from bpyutils.util._dict   import merge_dict
+from bpyutils.util.string  import get_random_str
 from bpyutils._compat      import iteritems
 
 import deeply.datasets as dd
@@ -49,30 +49,50 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
         sequencify(dd.load(*DATASETS, data_dir = data_dir, shuffle_files = True))
     )
 
-    width, height   = IMAGE_SIZE
-    # TODO: Add Image Enhancers.
-    image_augmentor = iaa.Sequential([
+    width, height  = IMAGE_SIZE
+
+    base_augmentor = iaa.Sequential([
+        dia.Combination([
+            iaa.Fliplr(1.0),
+            iaa.Flipud(1.0),
+            iaa.Affine(scale = 1.3),
+            iaa.Affine(scale = 0.7),
+            iaa.Rotate(rotate = (-45, 45)),
+            iaa.ShearX((-20, 20)),
+            iaa.ShearY((-20, 20)),
+            iaa.Translate(percent = (-0.1, 0.1)),
+            iaa.Translate(percent = (-0.1, 0.1))
+        ]),
         iaa.Resize({ "width": width, "height": height })
     ])
 
+    image_augmentor = base_augmentor # TODO: Add Image Enhancers.
+
     mask_augmentor  = iaa.Sequential([
-        iaa.Resize({ "width": width, "height": height }),
+        base_augmentor,
         dia.Dilate(kernel = np.ones((15, 15)))
     ])
-    
+
     for dataset in datasets:
         dataset = split_datasets(dataset)
         groups  = dict(zip(SPLIT_TYPES, dataset))
 
         for split_type, split in iteritems(groups):
-            dir_path = osp.join(data_dir, split_type)
+            dir_path   = osp.join(data_dir, split_type)
+
+            images_dir = osp.join(dir_path, "images")
+            masks_dir  = osp.join(dir_path, "masks")
 
             if check:
                 split = split.take(3)
 
             for i, data in enumerate(tq.tqdm(split.batch(1))):
-                augment_images(image_augmentor, images = data["image"].numpy(), filename = osp.join(dir_path, "images", "%s.jpg" % i))
-                augment_images(mask_augmentor,  images = data["mask"].numpy(),  filename = osp.join(dir_path, "masks",  "%s.jpg" % i))
+                prefix = get_random_str()
+
+                image, mask = data["image"].numpy(), data["mask"].numpy()
+
+                augment_images(image_augmentor, images = image, dir_path = images_dir, prefix = prefix)
+                augment_images(mask_augmentor,  images = mask,  dir_path = masks_dir,  prefix = prefix)
 
     # config = [
     #     { "source": osp.join(data_dir, split_type), "destination": split_type }
