@@ -24,7 +24,7 @@ _PREFIX  = NAME.upper()
 
 DATASETS = (
     "cvc_clinic_db",
-    # "etis_larib",
+    "etis_larib",
     "kvasir_segmented",
     "hyper_kvasir_segmented"
 )
@@ -55,7 +55,7 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
         dia.Combination([
             iaa.Fliplr(1.0),
             # iaa.Flipud(1.0),
-            # iaa.Affine(scale = 1.3),
+            iaa.Affine(scale = 1.3),
             # iaa.Affine(scale = 0.7),
             # iaa.Rotate(rotate = (-45, 45)),
             # iaa.ShearX((-20, 20)),
