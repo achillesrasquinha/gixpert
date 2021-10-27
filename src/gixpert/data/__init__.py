@@ -57,7 +57,7 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
             # iaa.Flipud(1.0),
             iaa.Affine(scale = 1.3),
             # iaa.Affine(scale = 0.7),
-            iaa.Rotate(rotate = (-45, 45)),
+            # iaa.Rotate(rotate = (-45, 45)),
             # iaa.ShearX((-20, 20)),
             # iaa.ShearY((-20, 20)),
             # iaa.TranslateX(percent = (-0.1, 0.1)),
