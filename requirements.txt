@@ -1,5 +1,6 @@
 git+git://github.com/achillesrasquinha/bpyutils.git@develop#egg=bpyutils
 git+git://github.com/achillesrasquinha/deeply.git@develop#egg=deeply
+git+git://github.com/achillesrasquinha/imgaug.git@multi-image#egg=imgaug
 kaggle
 wandb
 patool
