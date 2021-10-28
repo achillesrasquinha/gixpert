@@ -16,8 +16,7 @@ from   deeply.datasets.util import SPLIT_TYPES, split as split_datasets
 from   deeply.util.image    import augment as augment_images
 import deeply.img.augmenters as dia
 
-from gixpert.config import PATH
-from gixpert.const  import IMAGE_SIZE
+from gixpert.config import PATH, DEFAULT
 from gixpert import __name__ as NAME, dops
 
 _PREFIX  = NAME.upper()
@@ -49,19 +48,19 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
         sequencify(dd.load(*DATASETS, data_dir = data_dir, shuffle_files = True))
     )
 
-    width, height  = IMAGE_SIZE
+    width, height  = DEFAULT["image_size"]
 
     base_augmentor = iaa.Sequential([
         dia.Combination([
             iaa.Fliplr(1.0),
-            # iaa.Flipud(1.0),
+            iaa.Flipud(1.0),
             iaa.Affine(scale = 1.3),
-            # iaa.Affine(scale = 0.7),
-            # iaa.Rotate(rotate = (-45, 45)),
-            # iaa.ShearX((-20, 20)),
-            # iaa.ShearY((-20, 20)),
-            # iaa.TranslateX(percent = (-0.1, 0.1)),
-            # iaa.TranslateY(percent = (-0.1, 0.1))
+            iaa.Affine(scale = 0.7),
+            iaa.Rotate(rotate = (-45, 45)),
+            iaa.ShearX((-20, 20)),
+            iaa.ShearY((-20, 20)),
+            iaa.TranslateX(percent = (-0.1, 0.1)),
+            iaa.TranslateY(percent = (-0.1, 0.1))
         ]),
         iaa.Resize({ "width": width, "height": height })
     ])

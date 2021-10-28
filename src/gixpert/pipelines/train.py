@@ -13,8 +13,7 @@ from deeply.generators    import ImageMaskGenerator
 from deeply.losses        import dice_loss
 
 from gixpert.data   import get_data_dir
-from gixpert.config import PATH
-from gixpert.const  import IMAGE_SIZE
+from gixpert.config import DEFAULT
 from gixpert import __name__ as NAME, dops, settings
 
 _PREFIX = NAME.upper()
@@ -23,7 +22,7 @@ def build_model(artifacts_path = None):
     dropout_rate  = settings.get("dropout_rate")
     batch_norm    = settings.get("batch_norm")
 
-    width, height = IMAGE_SIZE
+    width, height = DEFAULT["image_size"]
 
     unet = UNet(x = width, y = height, n_classes = 1,
         final_activation = "sigmoid", batch_norm = batch_norm, 
