@@ -10,7 +10,7 @@ from bpyutils.util.array   import sequencify
 from bpyutils.util.types   import lmap
 from bpyutils.util.string  import get_random_str
 from bpyutils._compat      import iteritems
-from bpyutils.logger import get_logger
+from bpyutils.log import get_logger
 
 import deeply.datasets as dd
 from   deeply.datasets.util import SPLIT_TYPES, split as split_datasets
@@ -97,8 +97,8 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
                 augment_images(image_augmentor, images = image, dir_path = images_dir, prefix = prefix)
                 augment_images(mask_augmentor,  images = mask,  dir_path = masks_dir,  prefix = prefix)
 
-    # config = [
-    #     { "source": osp.join(data_dir, split_type), "destination": split_type }
-    #         for split_type in SPLIT_TYPES
-    # ]
-    # dops.upload(*config)
+    config = [
+        { "source": osp.join(data_dir, split_type), "destination": split_type }
+            for split_type in SPLIT_TYPES
+    ]
+    dops.upload(*config)
