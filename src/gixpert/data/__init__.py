@@ -105,8 +105,8 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
                     augment_images(image_augmentor, images = image, dir_path = images_dir, prefix = prefix)
                     augment_images(mask_augmentor,  images = mask,  dir_path = masks_dir,  prefix = prefix)
 
-        # config = [
-        #     { "source": osp.join(data_dir, split_type), "destination": split_type }
-        #         for split_type in SPLIT_TYPES
-        # ]
-        # dops.upload(*config, name = 'dataset')
+        config = [
+            { "source": osp.join(data_dir, split_type), "destination": split_type }
+                for split_type in SPLIT_TYPES
+        ]
+        dops.upload(*config, name = 'dataset')
