@@ -8,6 +8,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         bash \
         git \
+        curl \
         python-dev \
     && curl -O https://bootstrap.pypa.io/get-pip.py \
     && python get-pip.py \
