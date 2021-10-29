@@ -8,6 +8,10 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         bash \
         git \
+        python-dev \
+    && curl -O https://bootstrap.pypa.io/get-pip.py \
+    && python get-pip.py \
+    && rm get-pip.py \
     && mkdir -p $GIXPERT_PATH
 
 COPY . $GIXPERT_PATH
