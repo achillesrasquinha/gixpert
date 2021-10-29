@@ -16,6 +16,7 @@ import deeply.datasets as dd
 from   deeply.datasets.util import SPLIT_TYPES, split as split_datasets
 from   deeply.util.image    import augment as augment_images
 import deeply.img.augmenters as dia
+import deeply
 
 from gixpert.config import PATH, DEFAULT
 from gixpert import __name__ as NAME, dops
@@ -25,9 +26,9 @@ logger   = get_logger(name = NAME)
 
 DATASETS = (
     "cvc_clinic_db",
-    # "etis_larib",
-    # "kvasir_segmented",
-    # "hyper_kvasir_segmented"
+    "etis_larib",
+    "kvasir_segmented",
+    "hyper_kvasir_segmented"
 )
 
 def get_data_dir(data_dir = None):
@@ -41,64 +42,76 @@ def get_data_dir(data_dir = None):
 
 def get_data(data_dir = None, check = False, *args, **kwargs):
     data_dir = get_data_dir(data_dir)
-    datasets = dd.load(*DATASETS, data_dir = data_dir)
+
+    try:
+        dops.download('dataset:latest', target_dir = data_dir)
+    except deeply.exception.OpsError:
+        logger.warn("No data object found. Building...")
+
+        datasets = dd.load(*DATASETS, data_dir = data_dir)
 
 def preprocess_data(data_dir = None, check = False, *args, **kwargs):
     data_dir = get_data_dir(data_dir)
-    datasets = lmap(
-        lambda x: x["data"],
-        sequencify(dd.load(*DATASETS, data_dir = data_dir, shuffle_files = True))
-    )
 
-    width, height  = DEFAULT["image_size"]
+    try:
+        dops.download('dataset:latest', target_dir = data_dir)
+    except deeply.exception.OpsError:
+        logger.warn("No data object found. Building...")
 
-    base_augmentor = iaa.Sequential([
-        dia.Combination([
-            iaa.Fliplr(1.0),
-            iaa.Flipud(1.0),
-            iaa.Affine(scale = 1.3),
-            iaa.Affine(scale = 0.7),
-            iaa.Rotate(rotate = (-45, 45)),
-            iaa.ShearX((-20, 20)),
-            iaa.ShearY((-20, 20)),
-            iaa.TranslateX(percent = (-0.1, 0.1)),
-            iaa.TranslateY(percent = (-0.1, 0.1))
-        ]),
-        iaa.Resize({ "width": width, "height": height })
-    ])
+        datasets = lmap(
+            lambda x: x["data"],
+            sequencify(dd.load(*DATASETS, data_dir = data_dir, shuffle_files = True))
+        )
 
-    image_augmentor = base_augmentor # TODO: Add Image Enhancers.
+        width, height  = DEFAULT["image_size"]
 
-    mask_augmentor  = iaa.Sequential([
-        base_augmentor,
-        dia.Dilate(kernel = np.ones((15, 15)))
-    ])
+        base_augmentor = iaa.Sequential([
+            dia.Combination([
+                iaa.Fliplr(1.0),
+                iaa.Flipud(1.0),
+                iaa.Affine(scale = 1.3),
+                iaa.Affine(scale = 0.7),
+                iaa.Rotate(rotate = (-45, 45)),
+                iaa.ShearX((-20, 20)),
+                iaa.ShearY((-20, 20)),
+                iaa.TranslateX(percent = (-0.1, 0.1)),
+                iaa.TranslateY(percent = (-0.1, 0.1))
+            ]),
+            iaa.Resize({ "width": width, "height": height })
+        ])
 
-    for i, dataset in enumerate(datasets):
-        dataset = split_datasets(dataset)
-        groups  = dict(zip(SPLIT_TYPES, dataset))
+        image_augmentor = base_augmentor # TODO: Add Image Enhancers.
 
-        for split_type, split in iteritems(groups):
-            dir_path   = osp.join(data_dir, split_type)
+        mask_augmentor  = iaa.Sequential([
+            base_augmentor,
+            dia.Dilate(kernel = np.ones((15, 15)))
+        ])
 
-            images_dir = osp.join(dir_path, "images")
-            masks_dir  = osp.join(dir_path, "masks")
+        for i, dataset in enumerate(datasets):
+            dataset = split_datasets(dataset)
+            groups  = dict(zip(SPLIT_TYPES, dataset))
 
-            if check:
-                split = split.take(3)
+            for split_type, split in iteritems(groups):
+                dir_path   = osp.join(data_dir, split_type)
 
-            logger.info("Augmenting dataset %s for type %s..." % (DATASETS[i], split_type))
+                images_dir = osp.join(dir_path, "images")
+                masks_dir  = osp.join(dir_path, "masks")
 
-            for data in tq.tqdm(split.batch(1)):
-                prefix = get_random_str()
+                if check:
+                    split = split.take(3)
 
-                image, mask = data["image"].numpy(), data["mask"].numpy()
+                logger.info("Augmenting dataset %s for type %s..." % (DATASETS[i], split_type))
 
-                augment_images(image_augmentor, images = image, dir_path = images_dir, prefix = prefix)
-                augment_images(mask_augmentor,  images = mask,  dir_path = masks_dir,  prefix = prefix)
+                for data in tq.tqdm(split.batch(1)):
+                    prefix = get_random_str()
 
-    config = [
-        { "source": osp.join(data_dir, split_type), "destination": split_type }
-            for split_type in SPLIT_TYPES
-    ]
-    dops.upload(*config, name = 'dataset')
+                    image, mask = data["image"].numpy(), data["mask"].numpy()
+
+                    augment_images(image_augmentor, images = image, dir_path = images_dir, prefix = prefix)
+                    augment_images(mask_augmentor,  images = mask,  dir_path = masks_dir,  prefix = prefix)
+
+        config = [
+            { "source": osp.join(data_dir, split_type), "destination": split_type }
+                for split_type in SPLIT_TYPES
+        ]
+        dops.upload(*config, name = 'dataset')
