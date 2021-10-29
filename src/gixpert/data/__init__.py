@@ -10,6 +10,7 @@ from bpyutils.util.array   import sequencify
 from bpyutils.util.types   import lmap
 from bpyutils.util.string  import get_random_str
 from bpyutils._compat      import iteritems
+from bpyutils.logger import get_logger
 
 import deeply.datasets as dd
 from   deeply.datasets.util import SPLIT_TYPES, split as split_datasets
@@ -20,6 +21,7 @@ from gixpert.config import PATH, DEFAULT
 from gixpert import __name__ as NAME, dops
 
 _PREFIX  = NAME.upper()
+logger   = get_logger(name = NAME)
 
 DATASETS = (
     "cvc_clinic_db",
@@ -72,7 +74,7 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
         dia.Dilate(kernel = np.ones((15, 15)))
     ])
 
-    for dataset in datasets:
+    for i, dataset in enumerate(datasets):
         dataset = split_datasets(dataset)
         groups  = dict(zip(SPLIT_TYPES, dataset))
 
@@ -84,6 +86,8 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
 
             if check:
                 split = split.take(3)
+
+            logger.info("Augmenting dataset %s for type %s..." % (DATASETS[i], split_type))
 
             for i, data in enumerate(tq.tqdm(split.batch(1))):
                 prefix = get_random_str()
