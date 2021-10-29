@@ -12,7 +12,7 @@ RUN apt-get update && \
         python3-dev \
     && ln -s python3 python \
     && curl -O https://bootstrap.pypa.io/get-pip.py \
-    && python get-pip.py \
+    && python3 get-pip.py \
     && rm get-pip.py \
     && mkdir -p $GIXPERT_PATH
 
@@ -22,7 +22,7 @@ COPY ./docker/entrypoint.sh /entrypoint.sh
 WORKDIR $GIXPERT_PATH
 
 RUN pip install -r ./requirements.txt && \
-    python setup.py install
+    python3 setup.py install
 
 ENTRYPOINT ["/entrypoint.sh"]
 
