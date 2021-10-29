@@ -10,7 +10,6 @@ RUN apt-get update && \
         git \
         curl \
         python3-dev \
-    && ln -s python3 python \
     && curl -O https://bootstrap.pypa.io/get-pip.py \
     && python3 get-pip.py \
     && rm get-pip.py \

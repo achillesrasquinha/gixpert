@@ -55,14 +55,14 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
     base_augmentor = iaa.Sequential([
         dia.Combination([
             iaa.Fliplr(1.0),
-            # iaa.Flipud(1.0),
-            # iaa.Affine(scale = 1.3),
-            # iaa.Affine(scale = 0.7),
-            # iaa.Rotate(rotate = (-45, 45)),
-            # iaa.ShearX((-20, 20)),
-            # iaa.ShearY((-20, 20)),
-            # iaa.TranslateX(percent = (-0.1, 0.1)),
-            # iaa.TranslateY(percent = (-0.1, 0.1))
+            iaa.Flipud(1.0),
+            iaa.Affine(scale = 1.3),
+            iaa.Affine(scale = 0.7),
+            iaa.Rotate(rotate = (-45, 45)),
+            iaa.ShearX((-20, 20)),
+            iaa.ShearY((-20, 20)),
+            iaa.TranslateX(percent = (-0.1, 0.1)),
+            iaa.TranslateY(percent = (-0.1, 0.1))
         ]),
         iaa.Resize({ "width": width, "height": height })
     ])
@@ -101,4 +101,4 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
         { "source": osp.join(data_dir, split_type), "destination": split_type }
             for split_type in SPLIT_TYPES
     ]
-    dops.upload(*config)
+    dops.upload(*config, name = 'dataset')
