@@ -16,7 +16,6 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    container: quay.io/singularity/docker2singularity
       
     steps:
       - uses: actions/checkout@v2
@@ -32,11 +31,3 @@ jobs:
       - name: Push Image
         run: |
           make docker-push
-      - name: Build Singularity Image
-        run: |
-          docker2singularity $DOCKER_REGISTRY/$DOCKER_USERNAME/$PROJECT
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: singularity-file
-          path: '*.sif'
