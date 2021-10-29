@@ -10,7 +10,6 @@ RUN apt-get update && \
         git \
         curl \
         python3-dev \
-        libglib2.0-0 \
     && curl -O https://bootstrap.pypa.io/get-pip.py \
     && python3 get-pip.py \
     && rm get-pip.py \
