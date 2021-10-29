@@ -18,6 +18,7 @@ git+git://github.com/achillesrasquinha/imgaug.git@multi-image#egg=imgaug
 kaggle
 wandb
 patool
+imagecorruptions
 pipenv
 jedi<0.18
 ipython

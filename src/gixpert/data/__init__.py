@@ -68,14 +68,9 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
         base_augmentor = iaa.Sequential([
             dia.Combination([
                 iaa.Fliplr(1.0),
-                iaa.Flipud(1.0),
-                iaa.Affine(scale = 1.3),
-                iaa.Affine(scale = 0.7),
-                iaa.Rotate(rotate = (-45, 45)),
-                iaa.ShearX((-20, 20)),
-                iaa.ShearY((-20, 20)),
-                iaa.TranslateX(percent = (-0.1, 0.1)),
-                iaa.TranslateY(percent = (-0.1, 0.1))
+                iaa.Affine(scale  = (0.9, 1.2)),
+                iaa.Rotate(rotate = (-30, 30)),
+                iaa.Affine(translate_percent = 0.005),
             ]),
             iaa.Resize({ "width": width, "height": height })
         ])
@@ -84,7 +79,7 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
 
         mask_augmentor  = iaa.Sequential([
             base_augmentor,
-            dia.Dilate(kernel = np.ones((15, 15)))
+            dia.Dilate(kernel = np.ones((10, 10)))
         ])
 
         for i, dataset in enumerate(datasets):
@@ -110,8 +105,8 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
                     augment_images(image_augmentor, images = image, dir_path = images_dir, prefix = prefix)
                     augment_images(mask_augmentor,  images = mask,  dir_path = masks_dir,  prefix = prefix)
 
-        config = [
-            { "source": osp.join(data_dir, split_type), "destination": split_type }
-                for split_type in SPLIT_TYPES
-        ]
-        dops.upload(*config, name = 'dataset')
+        # config = [
+        #     { "source": osp.join(data_dir, split_type), "destination": split_type }
+        #         for split_type in SPLIT_TYPES
+        # ]
+        # dops.upload(*config, name = 'dataset')
