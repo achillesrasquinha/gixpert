@@ -15,7 +15,8 @@ env:
 jobs:
   build:
     name: Build
-    runs-on: quay.io/singularity/docker2singularity
+    runs-on: ubuntu-latest
+    container: quay.io/singularity/docker2singularity
       
     steps:
       - uses: actions/checkout@v2
