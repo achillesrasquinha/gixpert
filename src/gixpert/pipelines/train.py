@@ -14,9 +14,7 @@ from deeply.losses        import dice_loss
 
 from gixpert.data   import get_data_dir
 from gixpert.config import DEFAULT
-from gixpert import __name__ as NAME, dops, settings
-
-_PREFIX = NAME.upper()
+from gixpert import dops, settings
 
 def build_model(artifacts_path = None):
     dropout_rate  = settings.get("dropout_rate")
@@ -55,7 +53,7 @@ def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs
     args = dict(
         batch_size = batch_size,
         color_mode = "grayscale",
-        image_size = IMAGE_SIZE,
+        image_size = DEFAULT["image_size"],
         mask_size  = output_shape,
         shuffle    = True
     )

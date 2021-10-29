@@ -25,9 +25,9 @@ logger   = get_logger(name = NAME)
 
 DATASETS = (
     "cvc_clinic_db",
-    "etis_larib",
-    "kvasir_segmented",
-    "hyper_kvasir_segmented"
+    # "etis_larib",
+    # "kvasir_segmented",
+    # "hyper_kvasir_segmented"
 )
 
 def get_data_dir(data_dir = None):
@@ -55,14 +55,14 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
     base_augmentor = iaa.Sequential([
         dia.Combination([
             iaa.Fliplr(1.0),
-            iaa.Flipud(1.0),
-            iaa.Affine(scale = 1.3),
-            iaa.Affine(scale = 0.7),
-            iaa.Rotate(rotate = (-45, 45)),
-            iaa.ShearX((-20, 20)),
-            iaa.ShearY((-20, 20)),
-            iaa.TranslateX(percent = (-0.1, 0.1)),
-            iaa.TranslateY(percent = (-0.1, 0.1))
+            # iaa.Flipud(1.0),
+            # iaa.Affine(scale = 1.3),
+            # iaa.Affine(scale = 0.7),
+            # iaa.Rotate(rotate = (-45, 45)),
+            # iaa.ShearX((-20, 20)),
+            # iaa.ShearY((-20, 20)),
+            # iaa.TranslateX(percent = (-0.1, 0.1)),
+            # iaa.TranslateY(percent = (-0.1, 0.1))
         ]),
         iaa.Resize({ "width": width, "height": height })
     ])
@@ -89,7 +89,7 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
 
             logger.info("Augmenting dataset %s for type %s..." % (DATASETS[i], split_type))
 
-            for i, data in enumerate(tq.tqdm(split.batch(1))):
+            for data in tq.tqdm(split.batch(1)):
                 prefix = get_random_str()
 
                 image, mask = data["image"].numpy(), data["mask"].numpy()

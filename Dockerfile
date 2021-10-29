@@ -1,4 +1,4 @@
-FROM  python:3.9
+FROM  nvidia/cuda:11.4.2-cudnn8-devel-ubuntu20.04
 
 LABEL maintainer=achillesrasquinha@gmail.com
 
