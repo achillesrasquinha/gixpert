@@ -37,7 +37,9 @@ settings = Settings(location = PATH["CACHE"], defaults = {
     "batch_norm": False,
     "dropout_rate": 0.5,
     "epochs": 56,
-    "image_size": (512, 512)
+    
+    "image_width": 512,
+    "image_height": 512
 })
 
 def get_version_str():

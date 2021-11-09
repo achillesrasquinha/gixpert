@@ -63,7 +63,7 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
             sequencify(dd.load(*DATASETS, data_dir = data_dir, shuffle_files = True))
         )
 
-        width, height  = settings.get("image_size")
+        width, height  = settings.get("image_width"), settings.get("image_height")
 
         base_augmentor = iaa.Sequential([
             dia.Combination([
