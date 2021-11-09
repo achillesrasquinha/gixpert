@@ -16,6 +16,8 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    container:
+      image: quay.io/singularity/docker2singularity
       
     steps:
       - uses: actions/checkout@v2
@@ -31,3 +33,7 @@ jobs:
       - name: Push Image
         run: |
           make docker-push
+
+      - name: Build Singularity File
+        run: |
+          docker2singularity $DOCKER_REGISTRY/$DOCKER_USERNAME/$DOCKER_PROJECT
