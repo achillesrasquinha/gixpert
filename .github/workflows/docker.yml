@@ -14,10 +14,8 @@ env:
 
 jobs:
   build:
-    name: Build
+    name: Build Docker
     runs-on: ubuntu-latest
-    container:
-      image: quay.io/singularity/docker2singularity
       
     steps:
       - uses: actions/checkout@v2
@@ -27,16 +25,26 @@ jobs:
       - name: Login to Registry
         run: |
           echo $GITHUB_TOKEN | docker login $DOCKER_REGISTRY -u $DOCKER_USERNAME --password-stdin
-      - name: Install dependencies
-        run: |
-          apt-get install -yqq make
       - name: Build Image
         run: |
           make docker-build
       - name: Push Image
         run: |
           make docker-push
-
-      - name: Build Singularity File
+  
+  build-singularity:
+    name: Build Singularity
+    runs-on: ubuntu-latest
+    container:
+      image: quay.io/singularity/docker2singularity
+    
+    steps:
+      - name: Build SIF File
         run: |
-          docker2singularity $DOCKER_REGISTRY/$DOCKER_USERNAME/$DOCKER_PROJECT
+          docker2singularity $DOCKER_REGISTRY/$DOCKER_USERNAME/$PROJECT
+      
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: SIF
+          path: /output/*.sif
