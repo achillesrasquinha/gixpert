@@ -18,7 +18,7 @@ from   deeply.util.image    import augment as augment_images
 import deeply.img.augmenters as dia
 import deeply
 
-from gixpert.config import PATH, DEFAULT
+from gixpert.config import PATH
 from gixpert import __name__ as NAME, dops, settings
 
 _PREFIX  = NAME.upper()
