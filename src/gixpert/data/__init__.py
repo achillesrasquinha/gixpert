@@ -19,7 +19,7 @@ import deeply.img.augmenters as dia
 import deeply
 
 from gixpert.config import PATH, DEFAULT
-from gixpert import __name__ as NAME, dops
+from gixpert import __name__ as NAME, dops, settings
 
 _PREFIX  = NAME.upper()
 logger   = get_logger(name = NAME)
@@ -63,14 +63,20 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
             sequencify(dd.load(*DATASETS, data_dir = data_dir, shuffle_files = True))
         )
 
-        width, height  = DEFAULT["image_size"]
+        width, height  = settings.get("image_size")
 
         base_augmentor = iaa.Sequential([
             dia.Combination([
                 iaa.Fliplr(1.0),
-                iaa.Affine(scale  = (0.9, 1.2)),
+                iaa.Flipud(0.5),
+                iaa.TranslateX(percent = (-0.15, 0.15)),
+                iaa.TranslateY(percent = (-0.15, 0.15)),
+                iaa.ScaleX((0.9, 1.2)),
+                iaa.ScaleY((0.9, 1.2)),
                 iaa.Rotate(rotate = (-30, 30)),
-                iaa.Affine(translate_percent = 0.005),
+                iaa.ShearX((-30, 30)),
+                iaa.ShearY((-30, 30)),
+                iaa.ElasticTransformation(alpha = (0, 30), sigma = 5.0)
             ]),
             iaa.Resize({ "width": width, "height": height })
         ])
@@ -83,7 +89,7 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
         ])
 
         for i, dataset in enumerate(datasets):
-            dataset = split_datasets(dataset)
+            dataset = split_datasets(dataset, splits = (.8, .1, .1))
             groups  = dict(zip(SPLIT_TYPES, dataset))
 
             for split_type, split in iteritems(groups):

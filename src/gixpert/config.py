@@ -10,7 +10,3 @@ PATH = dict()
 PATH["BASE"]  = pardir(__file__, 1)
 PATH["DATA"]  = osp.join(PATH["BASE"], "data")
 PATH["CACHE"] = get_config_path(NAME)
-
-DEFAULT = {
-    "image_size": (320, 320)
-}
