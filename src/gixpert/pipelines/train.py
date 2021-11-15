@@ -13,14 +13,14 @@ from deeply.generators    import ImageMaskGenerator
 from deeply.losses        import dice_loss
 
 from gixpert.data   import get_data_dir
-from gixpert.config import DEFAULT
 from gixpert import dops, settings
 
 def build_model(artifacts_path = None):
     dropout_rate  = settings.get("dropout_rate")
     batch_norm    = settings.get("batch_norm")
 
-    width, height = settings.get("image_size")
+    width, height = settings.get("image_width"), \
+        settings.get("image_height")
 
     unet = UNet(x = width, y = height, n_classes = 1,
         final_activation = "sigmoid", batch_norm = batch_norm, 
@@ -45,6 +45,9 @@ def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs
 
     output_shape = model.output_shape[1:-1]
 
+    width, height = settings.get("image_width"), \
+        settings.get("image_height")
+
     data_dir = get_data_dir(data_dir)
 
     path_img = osp.join(data_dir, "%s", "images")
@@ -53,7 +56,7 @@ def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs
     args = dict(
         batch_size = batch_size,
         color_mode = "grayscale",
-        image_size = DEFAULT["image_size"],
+        image_size = (width, height),
         mask_size  = output_shape,
         shuffle    = True
     )
