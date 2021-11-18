@@ -32,19 +32,6 @@ DATASETS = (
     "hyper_kvasir_segmented"
 )
 
-COMBINATION_AUGMENTER = dia.Combination([
-    iaa.Fliplr(1.0, name = "flip"),
-    # iaa.Flipud(0.5),
-    iaa.TranslateX(percent = (-0.15, 0.15), name = "translate-x"),
-    iaa.TranslateY(percent = (-0.15, 0.15), name = "translate-y"),
-    # iaa.ScaleX((0.9, 1.2)),
-    # iaa.ScaleY((0.9, 1.2)),
-    iaa.Rotate(rotate = (-30, 30), name = "rotate"),
-    # iaa.ShearX((-30, 30)),
-    # iaa.ShearY((-30, 30)),
-    # iaa.ElasticTransformation(alpha = (0, 30), sigma = 5.0)
-])
-
 def get_data_dir(data_dir = None):
     data_dir = data_dir \
         or getenv("DATA_DIR", prefix = _PREFIX) \
@@ -61,34 +48,6 @@ def get_datasets(check = False):
         dataset_names = [DEFAULT_DATASET]
 
     return dataset_names
-
-def get_segmap_augmenters():
-    width, height = settings.get("image_width"), settings.get("image_height")
-
-    combination_aug = COMBINATION_AUGMENTER
-
-    base_augmenter  = combination_aug 
-    
-    iaa.Sequential([
-        combination_aug,
-        iaa.Resize({ "width": width, "height": height })
-    ])
-
-    mask_augmenter  = combination_aug
-
-    iaa.Sequential([
-        base_augmenter,
-        dia.Dilate(kernel = np.ones((10, 10)))
-    ])
-
-    base_augmenter  = base_augmenter.localize_random_state()
-
-    image_augmenter = base_augmenter.to_deterministic()
-    mask_augmenter  = mask_augmenter.to_deterministic()
-
-    mask_augmenter  = mask_augmenter.copy_random_state(image_augmenter, matching = "name")
-
-    return image_augmenter, mask_augmenter
 
 def get_data(data_dir = None, check = False, *args, **kwargs):
     data_dir = get_data_dir(data_dir)
