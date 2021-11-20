@@ -75,7 +75,6 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
             sequencify(dd.load(*dataset_names, data_dir = data_dir, shuffle_files = True))
         )
 
-        batch_size    = 1 if check else settings.get("batch_size")
         width, height = settings.get("image_width"), settings.get("image_height")
 
         augmenter  = iaa.Sequential([
