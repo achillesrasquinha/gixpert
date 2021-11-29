@@ -2,7 +2,8 @@ FROM  nvidia/cuda:11.4.2-cudnn8-devel-ubuntu20.04
 
 LABEL maintainer=achillesrasquinha@gmail.com
 
-ENV GIXPERT_PATH=/usr/local/src/gixpert
+ENV GIXPERT_PATH=/usr/local/src/gixpert \
+    LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/cuda/targets/x86_64-linux/lib
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
