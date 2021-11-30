@@ -4,8 +4,11 @@ LABEL maintainer=achillesrasquinha@gmail.com
 
 ENV GIXPERT_PATH=/usr/local/src/gixpert
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+RUN echo \
+"deb http://security.ubuntu.com/ubuntu xenial-security main \
+deb http://cz.archive.ubuntu.com/ubuntu xenial main universe" >> /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
         bash \
         git \
         curl \
