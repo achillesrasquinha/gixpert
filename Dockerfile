@@ -1,4 +1,4 @@
-FROM  nvidia/cuda:11.4.2-cudnn8-devel-ubuntu20.04
+FROM  nvidia/cuda:8.0-cudnn7-devel-ubuntu14.04
 
 LABEL maintainer=achillesrasquinha@gmail.com
 
