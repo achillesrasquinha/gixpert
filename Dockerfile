@@ -1,4 +1,4 @@
-FROM  tensorflow:latest-gpu
+FROM  tensorflow/tensorflow:latest-gpu
 
 LABEL maintainer=achillesrasquinha@gmail.com
 
