@@ -53,7 +53,5 @@ jobs:
             --name ${SINGULARITY_IMAGE} \
              ${DOCKER_IMAGE}
 
-      - name: Push SIF File
-        run: |
           echo ${GITHUB_TOKEN} | singularity remote login -u ${DOCKER_USERNAME} --password-stdin oras://${DOCKER_REGISTRY}
           singularity push /output/${SINGULARITY_IMAGE}.sif oras://${DOCKER_REGISTRY}/${DOCKER_USERNAME}
