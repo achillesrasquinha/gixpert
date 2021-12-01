@@ -52,31 +52,39 @@ AUGMENTER     = iaa.Sequential([
     iaa.Resize({ "width": IMAGE_WIDTH, "height": IMAGE_HEIGHT })
 ])
 
-def _augment_dataset(dataset_name, *args, **kwargs):
+def _augment_split(split_type, dataset_name, *args, **kwargs):
     data_dir = get_data_dir(NAME, data_dir = kwargs.get("data_dir"))
     check    = kwargs.get("check", False)
 
-    dataset  = dd.load(dataset_name, data_dir = data_dir, shuffle_files = True)
+    dataset  = dd.load(dataset_name, data_dir = data_dir, shuffle_files = False)
 
     dataset  = split_datasets(dataset["data"], splits = (.8, .1, .1))
     groups   = dict(zip(SPLIT_TYPES, dataset))
 
-    logger.info("Augmenting dataset %s..." % dataset_name)
+    split_type, split = groups[split_type]
 
-    for split_type, split in iteritems(groups):
-        dir_path   = osp.join(data_dir, split_type)
+    logger.info("Augmenting dataset %s of type %s..." % (dataset_name, split_type))
+    
+    dir_path   = osp.join(data_dir, split_type)
 
-        images_dir = osp.join(dir_path, "images")
-        masks_dir  = osp.join(dir_path, "masks")
+    images_dir = osp.join(dir_path, "images")
+    masks_dir  = osp.join(dir_path, "masks")
 
-        if check:
-            split = split.take(3)
+    if check:
+        split = split.take(3)
 
-        for data in tq.tqdm(split.batch(1)):
-            image, mask = data["image"].numpy(), data["mask"].numpy()
-            
-            augment_images(AUGMENTER, images = image, masks = mask,
-                dir_images = images_dir, dir_masks = masks_dir)
+    for data in tq.tqdm(split.batch(1)):
+        image, mask = data["image"].numpy(), data["mask"].numpy()
+        
+        augment_images(AUGMENTER, images = image, masks = mask,
+            dir_images = images_dir, dir_masks = masks_dir)
+
+def _augment_dataset(dataset_name, *args, **kwargs):
+    jobs = kwargs.get("jobs", settings.get("jobs"))
+
+    with parallel.pool(processes = jobs) as pool:
+        function_ = build_fn(_augment_split, dataset_name = dataset_name, *args, **kwargs)
+        list(pool.map(function_, SPLIT_TYPES))
 
 def get_datasets(check = False):
     dataset_names = DATASETS
