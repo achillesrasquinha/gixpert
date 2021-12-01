@@ -21,6 +21,7 @@ from gixpert.__attr__ import (
 )
 from gixpert.__main__    import main
 from gixpert.config      import PATH
+from gixpert.const       import DEFAULT
 
 from bpyutils.cache       import Cache
 from bpyutils.config      import Settings, get_config_path
@@ -32,14 +33,15 @@ cache = Cache(dirname = __name__)
 cache.create()
 
 settings = Settings(location = PATH["CACHE"], defaults = {
-    "batch_size": 32,
-    "learning_rate": 1e-5,
-    "batch_norm": False,
-    "dropout_rate": 0.5,
-    "epochs": 56,
+    "jobs":                 DEFAULT["jobs"],
+    "batch_size":           DEFAULT["batch_size"],
+    "learning_rate":        DEFAULT["learning_rate"],
+    "batch_norm":           DEFAULT["batch_norm"],
+    "dropout_rate":         DEFAULT["dropout_rate"],
+    "epochs":               DEFAULT["epochs"],
     
-    "image_width": 512,
-    "image_height": 512
+    "image_width":          DEFAULT["image_width"],
+    "image_height":         DEFAULT["image_height"]
 })
 
 def get_version_str():

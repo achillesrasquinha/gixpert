@@ -47,7 +47,7 @@ jobs:
       - name: Build SIF File
         run: |
           DOCKER_IMAGE="${DOCKER_REGISTRY}/${DOCKER_USERNAME}/${PROJECT}"
-          SINGULARITY_IMAGE="$(echo -n ${DOCKER_IMAGE} | tr -c '[:alnum:].' '-').sif"
+          SINGULARITY_IMAGE="$(echo -n ${DOCKER_IMAGE} | tr -c '[:alnum:].' '-').singularity"
 
           docker-entrypoint.sh /docker2singularity.sh \
             --name ${SINGULARITY_IMAGE} \
