@@ -33,13 +33,32 @@ DATASETS = (
     "hyper_kvasir_segmented"
 )
 
-def _augment_dataset(dataset_name, augmenter, *args, **kwargs):
+IMAGE_WIDTH   = settings.get("image_width")
+IMAGE_HEIGHT  = settings.get("image_height")
+
+AUGMENTER     = iaa.Sequential([
+    dia.Combination([
+        iaa.Fliplr(1.0),
+        iaa.Flipud(0.5),
+        iaa.TranslateX(percent = (-0.15, 0.15)),
+        iaa.TranslateY(percent = (-0.15, 0.15)),
+        iaa.ScaleX((0.9, 1.2)),
+        iaa.ScaleY((0.9, 1.2)),
+        iaa.Rotate(rotate = (-30, 30)),
+        iaa.ShearX((-30, 30)),
+        iaa.ShearY((-30, 30)),
+        iaa.ElasticTransformation(alpha = (0, 30), sigma = 5.0)
+    ]),
+    iaa.Resize({ "width": IMAGE_WIDTH, "height": IMAGE_HEIGHT })
+])
+
+def _augment_dataset(dataset_name, *args, **kwargs):
     data_dir = get_data_dir(NAME, data_dir = kwargs.get("data_dir"))
     check    = kwargs.get("check", False)
 
-    dataset  = dd.load(dataset_name, shuffle_files = True, data_dir = data_dir)
+    dataset  = dd.load(dataset_name, data_dir = data_dir, shuffle_files = True)
 
-    dataset  = split_datasets(dataset, splits = (.8, .1, .1))
+    dataset  = split_datasets(dataset["data"], splits = (.8, .1, .1))
     groups   = dict(zip(SPLIT_TYPES, dataset))
 
     logger.info("Augmenting dataset %s..." % dataset_name)
@@ -56,7 +75,7 @@ def _augment_dataset(dataset_name, augmenter, *args, **kwargs):
         for data in tq.tqdm(split.batch(1)):
             image, mask = data["image"].numpy(), data["mask"].numpy()
             
-            augment_images(augmenter, images = image, masks = mask,
+            augment_images(AUGMENTER, images = image, masks = mask,
                 dir_images = images_dir, dir_masks = masks_dir)
 
 def get_datasets(check = False):
@@ -89,27 +108,9 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
 
         dataset_names = get_datasets(check = check)
 
-        width, height = settings.get("image_width"), settings.get("image_height")
-
-        augmenter  = iaa.Sequential([
-            dia.Combination([
-                iaa.Fliplr(1.0),
-                iaa.Flipud(0.5),
-                iaa.TranslateX(percent = (-0.15, 0.15)),
-                iaa.TranslateY(percent = (-0.15, 0.15)),
-                iaa.ScaleX((0.9, 1.2)),
-                iaa.ScaleY((0.9, 1.2)),
-                iaa.Rotate(rotate = (-30, 30)),
-                iaa.ShearX((-30, 30)),
-                iaa.ShearY((-30, 30)),
-                iaa.ElasticTransformation(alpha = (0, 30), sigma = 5.0)
-            ]),
-            iaa.Resize({ "width": width, "height": height })
-        ])
-
         with parallel.no_daemon_pool(processes = jobs) as pool:
             function_ = build_fn(_augment_dataset, data_dir = data_dir,
-                check = check, augmenter = augmenter, *args, **kwargs)
+                check = check, *args, **kwargs)
             list(pool.imap(function_, dataset_names))
 
         config = [
