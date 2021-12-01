@@ -56,4 +56,4 @@ jobs:
             --name ${SINGULARITY_IMAGE} \
              ${DOCKER_IMAGE}
 
-          singularity push /output/${SINGULARITY_IMAGE} oras://${DOCKER_REGISTRY}/${DOCKER_USERNAME}/${PROJECT}
+          singularity push /output/${SINGULARITY_IMAGE} oras://${DOCKER_REGISTRY}/${DOCKER_USERNAME}/${PROJECT}:singularity
