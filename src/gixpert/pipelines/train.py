@@ -12,8 +12,9 @@ from deeply.datasets.util import SPLIT_TYPES
 from deeply.generators    import ImageMaskGenerator
 from deeply.losses        import dice_loss
 
-from gixpert.data   import get_data_dir
-from gixpert import dops, settings
+from bpyutils.util.ml     import get_data_dir
+
+from gixpert import dops, settings, __name__ as NAME
 
 def build_model(artifacts_path = None):
     dropout_rate  = settings.get("dropout_rate")
@@ -49,7 +50,7 @@ def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs
     width, height = settings.get("image_width"), \
         settings.get("image_height")
 
-    data_dir = get_data_dir(data_dir)
+    data_dir = get_data_dir(NAME, data_dir)
 
     path_img = osp.join(data_dir, "%s", "images")
     path_msk = osp.join(data_dir, "%s", "masks")
