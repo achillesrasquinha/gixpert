@@ -29,7 +29,7 @@ jobs:
           python setup.py develop
       - name: Run Pipeline
         run: |
-          bpyutils --run-ml gixpert -p "artifacts_path=./artifacts.zip"
+          bpyutils --run-ml gixpert -p "check=True; artifacts_path=./artifacts.zip"
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
