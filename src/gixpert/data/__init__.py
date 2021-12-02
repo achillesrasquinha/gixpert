@@ -5,11 +5,9 @@ import imgaug.augmenters as iaa
 import tqdm as tq
 
 from bpyutils.util.environ import getenv
-from bpyutils.util.system  import makedirs
 from bpyutils.util.array   import sequencify
 from bpyutils.util.types   import lmap
-from bpyutils.util.ml      import get_data_dir
-from bpyutils.util.string  import get_random_str
+from bpyutils.util.ml      import get_data_dir, get_dataset_tag
 from bpyutils._compat      import iteritems
 from bpyutils.log import get_logger
 
@@ -33,6 +31,8 @@ DATASETS = (
     "hyper_kvasir_segmented"
 )
 
+TAG = get_dataset_tag(NAME)
+
 def get_datasets(check = False):
     dataset_names = DATASETS
 
@@ -46,7 +46,7 @@ def get_data(data_dir = None, check = False, *args, **kwargs):
     dataset_names = get_datasets(check = check)
 
     try:
-        dops.download('dataset:latest', target_dir = data_dir)
+        dops.download('dataset:%s' % TAG, target_dir = data_dir)
     except deeply.exception.OpsError:
         logger.warn("No data object found. Building...")
 
@@ -56,7 +56,7 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
     data_dir = get_data_dir(NAME, data_dir = data_dir)
 
     try:
-        dops.download('dataset:latest', target_dir = data_dir)
+        dops.download('dataset:%s' % TAG, target_dir = data_dir)
     except deeply.exception.OpsError:
         logger.warn("No data object found. Building...")
 
@@ -110,4 +110,4 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
                 for split_type in SPLIT_TYPES
         ]
 
-        dops.upload(*config, name = 'dataset')
+        dops.upload(*config, name = 'dataset:%s' % TAG)
