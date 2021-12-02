@@ -20,9 +20,9 @@ jobs:
         run: |
           echo "Checking out $GITHUB_REF..."
       - uses: actions/setup-python@v2
-        name: Set up Python 3
+        name: Set up Python 3.8
         with:
-          python-version: 3
+          python-version: 3.8
       - name: Install dependencies
         run: |
           pip install -r requirements-dev.txt
