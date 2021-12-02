@@ -8,6 +8,7 @@ from bpyutils.util.environ import getenv
 from bpyutils.util.system  import makedirs
 from bpyutils.util.array   import sequencify
 from bpyutils.util.types   import lmap
+from bpyutils.util.ml      import get_data_dir
 from bpyutils.util.string  import get_random_str
 from bpyutils._compat      import iteritems
 from bpyutils.log import get_logger
@@ -32,15 +33,6 @@ DATASETS = (
     "hyper_kvasir_segmented"
 )
 
-def get_data_dir(data_dir = None):
-    data_dir = data_dir \
-        or getenv("DATA_DIR", prefix = _PREFIX) \
-        or osp.join(PATH["CACHE"], "data")
-
-    makedirs(data_dir, exist_ok = True)
-
-    return data_dir
-
 def get_datasets(check = False):
     dataset_names = DATASETS
 
@@ -50,7 +42,7 @@ def get_datasets(check = False):
     return dataset_names
 
 def get_data(data_dir = None, check = False, *args, **kwargs):
-    data_dir = get_data_dir(data_dir)
+    data_dir = get_data_dir(NAME, data_dir = data_dir)
     dataset_names = get_datasets(check = check)
 
     try:
@@ -61,7 +53,7 @@ def get_data(data_dir = None, check = False, *args, **kwargs):
         datasets = dd.load(*dataset_names, data_dir = data_dir)
 
 def preprocess_data(data_dir = None, check = False, *args, **kwargs):
-    data_dir = get_data_dir(data_dir)
+    data_dir = get_data_dir(NAME, data_dir = data_dir)
 
     try:
         dops.download('dataset:latest', target_dir = data_dir)
@@ -104,7 +96,7 @@ def preprocess_data(data_dir = None, check = False, *args, **kwargs):
                 masks_dir  = osp.join(dir_path, "masks")
 
                 if check:
-                    split = split.take(3)
+                    split = split.take(1)
 
                 logger.info("Augmenting dataset %s for type %s..." % (dataset_names[i], split_type))
 
