@@ -5,6 +5,10 @@ on: [push, pull_request]
 env:
   PIP_USE_DEPRECATED: "legacy-resolver"
 
+  DEEPLY_WEIGHTS_AND_BIASES_API_KEY: ${{ secrets.WANDB_API_KEY }}
+  KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+  KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+
 jobs:
   train:
     name: Train

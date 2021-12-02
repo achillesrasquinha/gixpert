@@ -22,9 +22,10 @@ def build_model(artifacts_path = None):
     width, height = settings.get("image_width"), \
         settings.get("image_height")
 
-    unet = UNet(x = width, y = height, n_classes = 1,
+    unet = UNet(x = width, y = height, channels = 3, n_classes = 1,
         final_activation = "sigmoid", batch_norm = batch_norm, 
-        dropout_rate = dropout_rate, padding = "same")
+        dropout_rate = dropout_rate, padding = "same",
+        backbone = "efficient-net-b7", backbone_weights = "imagenet")
     
     if artifacts_path:
         path_plot = osp.join(artifacts_path, "model.png")
@@ -55,7 +56,7 @@ def train(check = False, data_dir = None, artifacts_path = None, *args, **kwargs
 
     args = dict(
         batch_size = batch_size,
-        color_mode = "grayscale",
+        # color_mode = "grayscale",
         image_size = (width, height),
         mask_size  = output_shape,
         shuffle    = True
