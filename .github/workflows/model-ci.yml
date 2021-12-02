@@ -13,14 +13,16 @@ jobs:
   train:
     name: Train
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/achillesrasquinha/dl
 
     steps:
       - uses: actions/checkout@v2
       - name: Show ref
         run: |
           echo "Checking out $GITHUB_REF..."
+      - uses: actions/setup-python@v2
+        name: Set up Python 3
+        with:
+          python-version: 3
       - name: Install dependencies
         run: |
           pip install -r requirements-dev.txt
