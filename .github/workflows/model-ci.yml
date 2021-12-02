@@ -9,9 +9,9 @@ env:
   KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
   KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
 
-concurrency: 
-  group: ${{ github.head_ref }}
-  cancel-in-progress: true
+# concurrency: 
+#   group: ${{ github.head_ref }}
+#   cancel-in-progress: true
 
 jobs:
   train:
