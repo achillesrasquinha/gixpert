@@ -196,7 +196,9 @@ endif
 docker-build: clean ## Build the Docker Image.
 	$(call log,INFO,Building Docker Image)
 
-	@docker build $(BASEDIR) --tag $(DOCKER_IMAGE) $(DOCKER_BUILD_ARGS)
+	@docker build \
+		--cache-from $(DOCKER_IMAGE) \
+		$(BASEDIR) --tag $(DOCKER_IMAGE) $(DOCKER_BUILD_ARGS)
 
 docker-push: ## Push Docker Image to Registry.
 	@docker push $(DOCKER_IMAGE)$(DOCKER_IMAGE_TAG)
