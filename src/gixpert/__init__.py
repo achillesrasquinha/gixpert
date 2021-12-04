@@ -41,7 +41,9 @@ settings = Settings(location = PATH["CACHE"], defaults = {
     "epochs":               DEFAULT["epochs"],
     
     "image_width":          DEFAULT["image_width"],
-    "image_height":         DEFAULT["image_height"]
+    "image_height":         DEFAULT["image_height"],
+
+    "datasets":             DEFAULT["datasets"]
 })
 
 def get_version_str():

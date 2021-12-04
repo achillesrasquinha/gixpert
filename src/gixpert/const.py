@@ -17,5 +17,12 @@ DEFAULT = {
     "dropout_rate":         0.5,
     "epochs":               50,
     "image_width":          512,
-    "image_height":         512
+    "image_height":         512,
+
+    "datasets":             (
+        "cvc_clinic_db",
+        "etis_larib",
+        "kvasir_segmented",
+        "hyper_kvasir_segmented"
+    )
 }

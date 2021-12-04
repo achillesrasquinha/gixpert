@@ -23,13 +23,8 @@ from gixpert import __name__ as NAME, dops, settings
 _PREFIX  = NAME.upper()
 logger   = get_logger(name = NAME)
 
-DEFAULT_DATASET = "cvc_clinic_db"
-DATASETS = (
-    DEFAULT_DATASET,
-    "etis_larib",
-    "kvasir_segmented",
-    "hyper_kvasir_segmented"
-)
+DATASETS = settings.get("datasets")
+DEFAULT_DATASET = DATASETS[0]
 
 TAG = get_dataset_tag(NAME)
 
