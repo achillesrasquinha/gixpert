@@ -12,6 +12,10 @@ env:
   DOCKER_USERNAME: ${{ github.actor }}
   PROJECT: ${{ github.event.repository.name }}
 
+concurrency: 
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-docker:
     name: Build Docker
@@ -51,7 +55,7 @@ jobs:
       - name: Increase Disk Space
         run: |
           rm -rf /host/{usr/share/dotnet,usr/local/lib/android,opt/ghc}
-          patch /docker2singularity.sh ./ci/scripts/docker2singularity.patch
+          patch /docker2singularity.sh ./ci/script/docker2singularity.patch
       - name: Login to Registry
         run: |
           echo $GITHUB_TOKEN | singularity remote login -u ${DOCKER_USERNAME} --password-stdin oras://${DOCKER_REGISTRY}

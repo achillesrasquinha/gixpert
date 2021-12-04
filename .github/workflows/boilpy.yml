@@ -2,6 +2,10 @@ name: Template
 
 on:
   push:
+
+concurrency: 
+  group: ${{ github.ref }}
+  cancel-in-progress: true
   
 jobs:
   template:

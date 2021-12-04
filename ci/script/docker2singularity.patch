@@ -1,0 +1,14 @@
+diff --git a/docker2singularity.sh b/docker2singularity.sh
+index 49b9c6f..5d4a04f 100755
+--- a/docker2singularity.sh
++++ b/docker2singularity.sh
+@@ -315,6 +315,9 @@ echo "(8/10) Stopping and removing the container..."
+ docker stop $container_id >> /dev/null
+ docker rm $container_id >> /dev/null
+
++docker container prune --force >> /dev/null
++docker image prune --all --force >> /dev/null
++
+ # Build a final image from the sandbox
+ echo "(9/10) Building ${image_format} container..."
+ if [ "$image_format" == "squashfs" ]; then
