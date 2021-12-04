@@ -44,6 +44,14 @@ jobs:
       options: --privileged
     
     steps:
+      - uses: actions/checkout@v2
+      - name: Show ref
+        run: |
+          echo "Checking out $GITHUB_REF..."
+      - name: Increase Disk Space
+        run: |
+          rm -rf /host/{usr/share/dotnet,usr/local/lib/android,opt/ghc}
+          patch /docker2singularity.sh ./ci/scripts/docker2singularity.patch
       - name: Login to Registry
         run: |
           echo $GITHUB_TOKEN | singularity remote login -u ${DOCKER_USERNAME} --password-stdin oras://${DOCKER_REGISTRY}
