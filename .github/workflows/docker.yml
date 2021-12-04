@@ -12,9 +12,9 @@ env:
   DOCKER_USERNAME: ${{ github.actor }}
   PROJECT: ${{ github.event.repository.name }}
 
-concurrency: 
-  group: ${{ github.ref }}
-  cancel-in-progress: true
+# concurrency: 
+#   group: ${{ github.ref }}
+#   cancel-in-progress: true
 
 jobs:
   build-docker:

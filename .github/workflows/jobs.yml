@@ -15,9 +15,9 @@ env:
   GIXPERT_JOBS_GITHUB_USERNAME: achillesrasquinha
   GIXPERT_JOBS_GITHUB_OAUTH_TOKEN: ${{ secrets.GIXPERT_JOBS_GITHUB_OAUTH_TOKEN }}
 
-concurrency: 
-  group: ${{ github.ref }}
-  cancel-in-progress: true
+# concurrency: 
+#   group: ${{ github.ref }}
+#   cancel-in-progress: true
 
 jobs:
   jobs:

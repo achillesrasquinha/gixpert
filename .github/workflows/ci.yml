@@ -10,9 +10,9 @@ env:
   VERBOSE: true
   TERM: xterm
 
-concurrency: 
-  group: ${{ github.ref }}
-  cancel-in-progress: true
+# concurrency: 
+#   group: ${{ github.ref }}
+#   cancel-in-progress: true
 
 jobs:
   test:
