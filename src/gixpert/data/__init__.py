@@ -23,7 +23,7 @@ from gixpert import __name__ as NAME, dops, settings
 _PREFIX  = NAME.upper()
 logger   = get_logger(name = NAME)
 
-DATASETS = settings.get("datasets")
+DATASETS = eval(settings.get("datasets"))
 DEFAULT_DATASET = DATASETS[0]
 
 TAG = get_dataset_tag(NAME)
