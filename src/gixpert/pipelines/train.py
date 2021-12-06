@@ -27,6 +27,8 @@ def build_model(artifacts_path = None):
         final_activation = "sigmoid", batch_norm = batch_norm, 
         dropout_rate = dropout_rate, padding = "same",
         backbone = "efficient-net-b7", backbone_weights = "imagenet")
+
+    # unet.
     
     if artifacts_path:
         path_plot = osp.join(artifacts_path, "model.png")
