@@ -196,12 +196,16 @@ endif
 docker-build: clean ## Build the Docker Image.
 	$(call log,INFO,Building Docker Image)
 
+	for folder in `ls ${BASEDIR}/docker/files`; do \
+		docker build ${BASEDIR}/docker/files/$$folder --tag $(DOCKER_IMAGE):$$folder $(DOCKER_BUILD_ARGS) ; \
+	done
+
 	@docker build \
 		--cache-from $(DOCKER_IMAGE) \
 		$(BASEDIR) --tag $(DOCKER_IMAGE) $(DOCKER_BUILD_ARGS)
 
 docker-push: ## Push Docker Image to Registry.
-	@docker push $(DOCKER_IMAGE)$(DOCKER_IMAGE_TAG)
+	@docker push $(DOCKER_IMAGE) --all-tags
 
 docker-tox: clean ## Test using Docker Tox Image.
 	$(call log,INFO,Running Tests using Docker Tox)
