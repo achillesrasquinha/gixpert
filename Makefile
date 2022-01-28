@@ -197,7 +197,9 @@ docker-build: clean ## Build the Docker Image.
 	$(call log,INFO,Building Docker Image)
 
 	for folder in `ls ${BASEDIR}/docker/files`; do \
-		docker build ${BASEDIR}/docker/files/$$folder --tag $(DOCKER_IMAGE):$$folder $(DOCKER_BUILD_ARGS) ; \
+		docker build 
+			--cache-from $(DOCKER_IMAGE) \
+			${BASEDIR}/docker/files/$$folder --tag $(DOCKER_IMAGE):$$folder $(DOCKER_BUILD_ARGS) ; \
 	done
 
 	@docker build \
